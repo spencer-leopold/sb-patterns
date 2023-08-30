@@ -1,4 +1,4 @@
-import { AnyConfiguration, Properties } from 'src/pattern/definition';
+import { AnyConfiguration, Properties } from './definition';
 
 /**
  * Performs a deep merge of objects and returns new object. Does not modify

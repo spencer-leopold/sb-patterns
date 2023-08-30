@@ -1,18 +1,24 @@
-import Field, { MultiValueTypes } from './Field';
-import { IPatternDefinition, Options, Properties, Property, Variants } from './definition';
-import { isNullOrUndefined, mergeDeep } from './utils';
+import Field, { MultiValueTypes } from "./Field";
+import {
+  IPatternDefinition,
+  Options,
+  Properties,
+  Property,
+  Variants,
+} from "./definition";
+import { isNullOrUndefined, mergeDeep } from "./utils";
 
-import { ComponentType } from 'react';
-import IPatternStorage from './IPatternStorage';
-import PatternVariant from './PatternVariant';
-import Setting from './Setting';
+import { ComponentType } from "react";
+import IPatternStorage from "./IPatternStorage";
+import PatternVariant from "./PatternVariant";
+import Setting from "./Setting";
 
 interface CleanedOptions {
   [key: string]: Options;
 }
 
 export default class Pattern {
-  public static DEFAULT_VARIANT_NAME = '__default';
+  public static DEFAULT_VARIANT_NAME = "__default";
 
   private id: string;
 
@@ -83,10 +89,10 @@ export default class Pattern {
   }
 
   public isVisible(app: string) {
-    if (this.visible == null || this.visible === '') {
+    if (this.visible == null || this.visible === "") {
       return true;
     }
-    const apps = this.visible.split('|');
+    const apps = this.visible.split("|");
     for (let i = 0; i < apps.length; i += 1) {
       if (apps[i].trim() === app) {
         return true;
@@ -95,19 +101,23 @@ export default class Pattern {
     return false;
   }
 
-  constructor(id: string, definition: IPatternDefinition, storage: IPatternStorage) {
+  constructor(
+    id: string,
+    definition: IPatternDefinition,
+    storage: IPatternStorage
+  ) {
     this.id = id;
     this.label = definition.label;
     this.description = definition.description;
     this.visible = definition.visible;
     this.storage = storage;
     this.use = definition.use;
-    this.iconPath = definition.icon_path?.replace('ws-assets://', '');
+    this.iconPath = definition.icon_path?.replace("ws-assets://", "");
     this.namespace = definition.namespace;
     this.parameters = definition.parameters;
     this.definition = definition;
     this.defaultVariant = new PatternVariant(
-      '__default',
+      "__default",
       this,
       Pattern.DEFAULT_VARIANT_NAME,
       this.use,
@@ -123,12 +133,13 @@ export default class Pattern {
   }
 
   public getVariant(id: string = Pattern.DEFAULT_VARIANT_NAME) {
-    const variantId = id === '' || id == null ? Pattern.DEFAULT_VARIANT_NAME : id;
+    const variantId =
+      id === "" || id == null ? Pattern.DEFAULT_VARIANT_NAME : id;
     if (this.patternVariants[variantId] == null) {
       throw new Error(
         `Variant "${id}" not found in pattern "${this.getId()}". Possible Variants are: "${Object.keys(
           this.patternVariants
-        ).join(', ')}"`
+        ).join(", ")}"`
       );
     }
     return this.patternVariants[variantId];
@@ -167,7 +178,8 @@ export default class Pattern {
           const options: Options = {};
           Object.entries(setting.options).forEach(([optionName, option]) => {
             const skipOption =
-              option?.condition?.variant && option?.condition?.variant !== variantKey;
+              option?.condition?.variant &&
+              option?.condition?.variant !== variantKey;
             if (!skipOption) {
               if (option.configuration) {
                 if (!settingsConfiguration[name]) {
@@ -183,13 +195,22 @@ export default class Pattern {
           cleanedSettings[name] = options;
         }
       });
-      const variantDefinition = variantsDefinitions[variantKey] ?? {};
+
+      if (!variantsDefinitions[variantKey]) {
+        throw new Error(
+          `Variant definition ${variantsDefinitions[variantKey]} not found`
+        );
+      }
+
+      const variantDefinition = variantsDefinitions[variantKey];
       const label = variantDefinition.label ?? this.label;
       const use = variantDefinition.use ?? this.use;
-      const description = variantDefinition.description ?? '';
+      const description = variantDefinition.description ?? "";
 
       const variantConfiguration =
-        variantDefinition.configuration != null ? variantDefinition.configuration : {};
+        variantDefinition.configuration != null
+          ? variantDefinition.configuration
+          : {};
       const mergedConfiguration = mergeDeep(
         configuration,
         settingsConfiguration,
@@ -216,13 +237,13 @@ export default class Pattern {
           key,
           settings[key].type,
           settings[key].label,
-          settings[key].description ?? '',
+          settings[key].description ?? "",
           settings[key].preview
         );
         setting.setRequired(!!settings[key].required);
         setting.setOptions(cleanedSettings[key]);
         if (settings[key].default_value) {
-          setting.setDefaultValue(settings[key].default_value ?? '');
+          setting.setDefaultValue(settings[key].default_value ?? "");
         }
 
         if (settings[key].default_value) {
@@ -231,7 +252,7 @@ export default class Pattern {
         if (
           !setting.getPreview() &&
           settings[key].required === true &&
-          settings[key].type === 'select'
+          settings[key].type === "select"
         ) {
           const keys = Object.keys(cleanedSettings[key]);
           if (keys.length > 0) {
@@ -247,13 +268,14 @@ export default class Pattern {
           key,
           fields[key].type,
           fields[key].label,
-          fields[key].description || '',
+          fields[key].description || "",
           fields[key].preview
         );
 
         field.setMultiValueType(MultiValueTypes.single_value);
         if (fields[key].multi_value_type) {
-          const multiValueType = fields[key].multi_value_type as keyof typeof MultiValueTypes;
+          const multiValueType = fields[key]
+            .multi_value_type as keyof typeof MultiValueTypes;
           field.setMultiValueType(MultiValueTypes[multiValueType]);
         } else if (Array.isArray(fields[key].preview)) {
           field.setMultiValueType(MultiValueTypes.single_value);
