@@ -6,6 +6,7 @@ import PatternStorage from "./PatternStorage";
 import PatternVariant from "./PatternVariant";
 import Setting from "./Setting";
 
+export type { AddonPatternOptions } from "./definition";
 export type { default as IPatternStorage } from "./IPatternStorage";
 export { default as Pattern } from "./Pattern";
 export { default as PatternVariant } from "./PatternVariant";

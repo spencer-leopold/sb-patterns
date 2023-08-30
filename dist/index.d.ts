@@ -76,6 +76,11 @@ interface IPatternDefinitions {
 interface Namespaces {
     [key: string]: string;
 }
+interface AddonPatternOptions {
+    appPath?: string;
+    storiesContexts?: string[];
+    webpackAliases?: Namespaces;
+}
 
 declare function setRenderer(renderer: IRenderer): void;
 declare function setNamespaces(namespaces: Namespaces): void;
@@ -412,4 +417,4 @@ declare function getStorage(): IPatternStorage;
 declare function argTypes(patternId: string, variantId: string): any;
 declare function args(defaultArgs: any, patternId: string, variantId: string): any;
 
-export { IPatternStorage, IRenderer, Pattern, PatternPreview, PatternVariant, argTypes, args, getStorage, renderer, storage };
+export { AddonPatternOptions, IPatternStorage, IRenderer, Pattern, PatternPreview, PatternVariant, argTypes, args, getStorage, renderer, storage };
