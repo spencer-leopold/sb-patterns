@@ -310,6 +310,9 @@ interface IPatternStorage {
     addDefinition(id: string, pattern: IPatternDefinition): void;
     getPatternIds(): string[];
     getComponent(useVal: string): ComponentType;
+    setNamespaces(namespaces: Namespaces): void;
+    createComponentStorageFromContext(contexts: __WebpackModuleApi.RequireContext[]): void;
+    createDefinitionsFromMultiContext(contexts: __WebpackModuleApi.RequireContext[]): void;
 }
 
 /**

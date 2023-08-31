@@ -1,7 +1,8 @@
-import { ComponentType } from 'react';
-import { IPatternDefinition } from './definition';
-import Pattern from './Pattern';
-import PatternVariant from './PatternVariant';
+import { IPatternDefinition, Namespaces } from "./definition";
+
+import { ComponentType } from "react";
+import Pattern from "./Pattern";
+import PatternVariant from "./PatternVariant";
 
 export default interface IPatternStorage {
   loadPattern(patternId: string): Pattern;
@@ -10,4 +11,11 @@ export default interface IPatternStorage {
   addDefinition(id: string, pattern: IPatternDefinition): void;
   getPatternIds(): string[];
   getComponent(useVal: string): ComponentType;
+  setNamespaces(namespaces: Namespaces): void;
+  createComponentStorageFromContext(
+    contexts: __WebpackModuleApi.RequireContext[]
+  ): void;
+  createDefinitionsFromMultiContext(
+    contexts: __WebpackModuleApi.RequireContext[]
+  ): void;
 }
