@@ -2,10 +2,13 @@
   "name": "@cmbr/sb-patterns",
   "version": "0.0.1",
   "description": "A library for creating patterns in Storybook that can be used with Drupal or other compatible platforms.",
-  "keywords": ["storybook-addons", "react"],
+  "keywords": [
+    "storybook-addons",
+    "react"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/spencer-leopold/sb-patterns"
+    "url": "git+https://github.com/spencer-leopold/sb-patterns.git"
   },
   "author": "Spencer Leopold <spencer.leopold@cmbr.co>",
   "license": "MIT",
@@ -21,7 +24,12 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": ["dist/**/*", "README.md", "*.js", "*.d.ts"],
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "*.js",
+    "*.d.ts"
+  ],
   "scripts": {
     "clean": "rimraf ./dist",
     "prebuild": "yarn clean",
@@ -63,5 +71,9 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/spencer-leopold/sb-patterns/issues"
+  },
+  "homepage": "https://github.com/spencer-leopold/sb-patterns#readme"
 }
