@@ -1,8 +1,8 @@
-import Field from './Field';
-import IPatternStorage from './IPatternStorage';
-import Pattern from './Pattern';
-import Setting from './Setting';
-import dedent from 'ts-dedent';
+import Field from "./Field";
+import IPatternStorage from "./IPatternStorage";
+import Pattern from "./Pattern";
+import Setting from "./Setting";
+import dedent from "ts-dedent";
 
 export default class PatternVariant {
   private pattern: Pattern;
@@ -28,7 +28,7 @@ export default class PatternVariant {
   private settings: Record<string, Setting> = {};
 
   private cleanStorybookString(string: string) {
-    return string.toLowerCase().replace(/ /g, '-').replace(/\//g, '-');
+    return string.toLowerCase().replace(/ /g, "-").replace(/\//g, "-");
   }
 
   constructor(
@@ -57,10 +57,10 @@ export default class PatternVariant {
   }
 
   public getCode() {
-    const variables: any = { variant: '' };
+    const variables: any = { variant: "" };
     const settings = this.getSettings();
 
-    if (this.getId() !== '__default') {
+    if (this.getId() !== "__default") {
       variables.variant = this.getId();
     } else {
       delete variables.variant;
@@ -68,21 +68,25 @@ export default class PatternVariant {
 
     Object.keys(settings).forEach((key: string) => {
       const setting = settings[key];
-      if (setting.getType() !== 'media_library' && setting.isEnable()) {
+      if (setting.getType() !== "media_library" && setting.isEnable()) {
         variables[key] = setting.getPreview();
       }
     });
 
     const withBlock =
-      Object.keys(variables).length === 0 ? '' : `with ${JSON.stringify(variables, null, 2)}`;
+      Object.keys(variables).length === 0
+        ? ""
+        : `with ${JSON.stringify(variables, null, 2)}`;
     delete variables.variant;
     const argsBlock =
-      Object.keys(variables).length === 0 ? "''" : `${JSON.stringify(variables, null, 2)}`;
+      Object.keys(variables).length === 0
+        ? "''"
+        : `${JSON.stringify(variables, null, 2)}`;
     const blocks = [
       {
-        title: 'Pattern function (recommended)',
+        title: "Pattern function (recommended)",
         code: dedent`
-          import { pattern } from 'sb-patterns';
+          import { pattern } from '@cmbr/sb-patterns';
           ...
           return (
             <>
@@ -93,9 +97,9 @@ export default class PatternVariant {
         `,
       },
       {
-        title: 'As a component',
+        title: "As a component",
         code: dedent`
-          import { ComponentName } from 'sb-patterns';
+          import { ComponentName } from '@cmbr/sb-patterns';
           TODO: Finish documenting this.
           ...
           return (
@@ -116,7 +120,7 @@ export default class PatternVariant {
         ${value.code}
       `);
     });
-    return generatedCode.join('\n\n');
+    return generatedCode.join("\n\n");
   }
 
   public getStoryId(): string {
@@ -229,8 +233,12 @@ export default class PatternVariant {
           }
           field.forEach((item) => {
             if (item.id !== undefined) {
-              parentVariables.children[`${key}--${i}`] = this.handleFieldItem(item);
-              this.handleSubPreviewPattern(item, parentVariables.children[`${key}--${i}`]);
+              parentVariables.children[`${key}--${i}`] =
+                this.handleFieldItem(item);
+              this.handleSubPreviewPattern(
+                item,
+                parentVariables.children[`${key}--${i}`]
+              );
               i += 1;
             }
           });
@@ -250,18 +258,20 @@ export default class PatternVariant {
     Object.keys(this.fields).forEach((key) => {
       const field: Field = this.fields[key];
       const preview = field.getPreview();
-      if (field.getType() === 'pattern' && Array.isArray(preview)) {
+      if (field.getType() === "pattern" && Array.isArray(preview)) {
         for (let i = 0; i < preview.length; i += 1) {
-          previewPatterns[`${key}--${i}`] = this.buildPreviewPattern(preview[i]);
+          previewPatterns[`${key}--${i}`] = this.buildPreviewPattern(
+            preview[i]
+          );
         }
-      } else if (field.getType() === 'pattern' && preview?.id) {
+      } else if (field.getType() === "pattern" && preview?.id) {
         previewPatterns[key] = this.buildPreviewPattern(preview);
       }
     });
     Object.keys(this.settings).forEach((key) => {
       const setting: Setting = this.settings[key];
       const preview = setting.getPreview();
-      if (setting.getType() === 'media_library' && preview?.id) {
+      if (setting.getType() === "media_library" && preview?.id) {
         previewPatterns[key] = this.buildPreviewPattern(preview);
       }
     });
@@ -283,7 +293,11 @@ export default class PatternVariant {
     this.beforeRenderHandler = handler;
   }
 
-  public getVariables(includeFields = true, includeSettings = true, includeVariant = true) {
+  public getVariables(
+    includeFields = true,
+    includeSettings = true,
+    includeVariant = true
+  ) {
     const values: Record<string, any> = {
       variant: undefined,
     };
@@ -293,7 +307,7 @@ export default class PatternVariant {
     if (includeFields) {
       Object.keys(this.fields).forEach((key) => {
         const field: Field = this.fields[key];
-        if (field !== null && field.getType() !== 'pattern') {
+        if (field !== null && field.getType() !== "pattern") {
           values[key] = field.getPreview();
         }
       });
@@ -301,7 +315,7 @@ export default class PatternVariant {
 
     if (includeSettings) {
       Object.keys(this.settings).forEach((key) => {
-        if (this.settings[key].getType() !== 'media_library') {
+        if (this.settings[key].getType() !== "media_library") {
           values[key] = this.settings[key].getPreview();
         }
       });

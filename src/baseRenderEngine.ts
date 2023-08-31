@@ -1,11 +1,13 @@
-import IRenderer from './IRenderer';
-import { MultiValueTypes } from './Field';
-import { Namespaces } from './definition';
-import Pattern from './Pattern';
-import PatternVariant from './PatternVariant';
-import { ReactDefaultRenderer } from './ReactDefaultRenderer';
-import { ReactElement } from 'react';
-import { storage } from './index';
+import IRenderer from "./IRenderer";
+import { MultiValueTypes } from "./Field";
+import { Namespaces } from "./definition";
+import Pattern from "./Pattern";
+import PatternVariant from "./PatternVariant";
+import { ReactDefaultRenderer } from "./ReactDefaultRenderer";
+import { ReactElement } from "react";
+import { getStorage } from "./index";
+
+const storage = getStorage();
 
 let rendererImpl: IRenderer = new ReactDefaultRenderer();
 let namespacesImpl: Namespaces = {};
@@ -33,7 +35,7 @@ export function getPatternConfiguration(
 ) {
   const variant: PatternVariant = storage.loadVariant(patternId, variantId);
   const config = variant.getConfiguration();
-  return config[configuration] || '';
+  return config[configuration] || "";
 }
 
 export function renderPatternPreview(
@@ -72,7 +74,7 @@ export function renderPatternPreview(
     Object.keys(promisedPreview).map((value: string) => {
       const index = +value;
       const promisedPreviewValue = promisedPreview[index];
-      const nameKeys = promisedPreviewNames[index].split('--');
+      const nameKeys = promisedPreviewNames[index].split("--");
       // Handling multi value fields.
       // Multi value patterns uses key--i as field name.
       if (nameKeys.length === 1) {
@@ -80,26 +82,40 @@ export function renderPatternPreview(
       } else {
         const fieldName = nameKeys[0];
         const delta: number = Number.parseInt(nameKeys[1], 10);
-        if (variant.getField(fieldName).multiValueType() === MultiValueTypes.items) {
-          if (typeof previewRenderedVariables[nameKeys[0]] === 'undefined') {
+        if (
+          variant.getField(fieldName).multiValueType() === MultiValueTypes.items
+        ) {
+          if (typeof previewRenderedVariables[nameKeys[0]] === "undefined") {
             previewRenderedVariables[nameKeys[0]] = [];
           }
           previewRenderedVariables[nameKeys[0]][delta] = promisedPreviewValue;
-        } else if (variant.getField(fieldName).multiValueType() === MultiValueTypes.field_items) {
-          if (typeof previewRenderedVariables[nameKeys[0]] === 'undefined') {
+        } else if (
+          variant.getField(fieldName).multiValueType() ===
+          MultiValueTypes.field_items
+        ) {
+          if (typeof previewRenderedVariables[nameKeys[0]] === "undefined") {
             previewRenderedVariables[nameKeys[0]] = [];
           }
-          previewRenderedVariables[nameKeys[0]][delta] = { content: promisedPreviewValue };
-        } else if (variant.getField(fieldName).multiValueType() === MultiValueTypes.single_value) {
-          if (typeof previewRenderedVariables[nameKeys[0]] === 'undefined') {
+          previewRenderedVariables[nameKeys[0]][delta] = {
+            content: promisedPreviewValue,
+          };
+        } else if (
+          variant.getField(fieldName).multiValueType() ===
+          MultiValueTypes.single_value
+        ) {
+          if (typeof previewRenderedVariables[nameKeys[0]] === "undefined") {
             previewRenderedVariables[nameKeys[0]] = [promisedPreviewValue];
           } else {
             previewRenderedVariables[nameKeys[0]].push(promisedPreviewValue);
           }
         } else {
-          previewRenderedVariables[nameKeys[0]] = `No multi value type for field: '${variant
+          previewRenderedVariables[
+            nameKeys[0]
+          ] = `No multi value type for field: '${variant
             .getPattern()
-            .getId()}:${fieldName}:${variant.getField(fieldName).multiValueType()}'`;
+            .getId()}:${fieldName}:${variant
+            .getField(fieldName)
+            .multiValueType()}'`;
         }
       }
     });
