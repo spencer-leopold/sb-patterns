@@ -1,6 +1,6 @@
 {
   "name": "@cmbr/sb-patterns",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A library for creating patterns in Storybook that can be used with Drupal or other compatible platforms.",
   "keywords": [
     "storybook-addons",
