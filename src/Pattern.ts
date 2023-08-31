@@ -196,13 +196,8 @@ export default class Pattern {
         }
       });
 
-      if (!variantsDefinitions[variantKey]) {
-        throw new Error(
-          `Variant definition ${variantsDefinitions[variantKey]} not found`
-        );
-      }
-
-      const variantDefinition = variantsDefinitions[variantKey];
+      const variantDefinition =
+        variantsDefinitions[variantKey] ?? this.definition;
       const label = variantDefinition.label ?? this.label;
       const use = variantDefinition.use ?? this.use;
       const description = variantDefinition.description ?? "";
